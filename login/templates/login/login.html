@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{% load static %}
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>登录</title>
+
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'login/css/login.css' %}" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    {#    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>#}
+    {#    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>#}
+    {#    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>#}
+</head>
+<body>
+<div class="container">
+    <div class="col" style="padding: 100px;">
+        <form class="form-login" action="/login/" method="post">
+            {% if login_form.captcha.errors %}
+                <div class="alert alert-warning">{{ login_form.captcha.errors }}</div>
+            {% elif message %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+            {% csrf_token %}
+            <h3 class="text-center">欢迎登录</h3>
+
+            <div class="form-group">
+                {{ login_form.username.label_tag }}
+                {{ login_form.username }}
+            </div>
+            <div class="form-group">
+                {{ login_form.password.label_tag }}
+                {{ login_form.password }}
+            </div>
+            <div class="form-group">
+                {{ login_form.captcha.label_tag }}
+                {{ login_form.captcha }}
+                {#                <a class="next-captcha" >#}
+                {#                    <img src="" alt="captcha" class="captcha">123456#}
+                {#                </a>#}
+                {#                <input type="text" id="id_reg_captcha_1" name="captcha_1" class="" placeholder="请输入验证码">#}
+                {#                <input type="hidden" id="id_reg_captcha_0" name="captcha_0" value="{{ hashkey }}">#}
+            </div>
+            {#            {{ login_forms }}#}
+
+            {#            <div class="form-group">#}
+            {#                <label for="id_username">用户名：</label>#}
+            {#                <input class="form-control" type="text" id="id_username" name="username" placeholder="Username" autofocus#}
+            {#                       required>#}
+            {#            </div>#}
+            {#            <div class="form-group">#}
+            {#                <label for="id_username">密码：</label>#}
+            {#                <input class="form-control" type="password" id="id_password" name="password" placeholder="Password" required>#}
+            {#            </div>#}
+            <div>
+                <a href="/register/" class="text-success">
+                    <ins>新用户注册</ins>
+                </a>
+                <button type="submit" class="btn btn-primary float-right">登录</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script>
+ $(function(){
+     $(".captcha").click(function(){
+         $.getJSON("{% url 'captcha-refresh' %}",function(resault){
+             $(".captcha").attr('src', resault.new_cptch_image);
+             $("#id_captcha_0").val(resault.new_cptch_key)
+         })
+     })
+ })
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
